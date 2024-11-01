@@ -38,15 +38,16 @@ public class TobaccoReportServiceIntegrationTest {
      * Test to verify if reports can be searched using submitted date.
      */
     @Test
-    public void whenRequestToGetReportBySubmittedDate_thenSuccess() {
-
+    public void givenReportExists_whenFetchingBySubmittedDate_thenReturnReportSuccessfully() {
+        //Given
         String expectedSubmittedDate = "06/21/2019";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getUrl("/reports"))
                 .queryParam("date_submitted", expectedSubmittedDate);
 
+        //When
         ResponseEntity<ReportSearchResponse> response = restTemplate.getForEntity(builder.toUriString(), ReportSearchResponse.class);
 
-        // Assert
+        //Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         ReportSearchResponse reportSearchResponse = response.getBody();
         assertThat(reportSearchResponse).isNotNull();
@@ -58,17 +59,17 @@ public class TobaccoReportServiceIntegrationTest {
      * Test to execute save report record api and verify if records have been successfully persisted and returned as response
      */
     @Test
-    public void whenRequestToSaveReportRecord_thenSuccess() {
-
+    public void givenValidReportRecord_whenSavingReportRecord_thenRecordIsSavedSuccessfully() {
+        //Given
         ReportRecord reportRecord = TestUtil.createReportRecord();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ReportRecord> request = new HttpEntity<>(reportRecord, headers);
 
+        //When
         ResponseEntity<ReportRecordEntity> response = restTemplate.postForEntity(getUrl("/reports"), request, ReportRecordEntity.class);
 
-        // Assert
+        //Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         ReportRecordEntity reportRecordEntity = response.getBody();
         assertThat(reportRecordEntity).isNotNull();
@@ -84,12 +85,14 @@ public class TobaccoReportServiceIntegrationTest {
      *
      */
     @Test
-    public void whenRequestToGetMostCommonProduct_thenSuccess() {
-
+    public void givenReportsExist_whenFetchingMostCommonProduct_thenReturnMostCommonProduct() {
+        //Given
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getUrl("/reports/products/common"));
+
+        //When
         ResponseEntity<Product> response = restTemplate.getForEntity(builder.toUriString(), Product.class);
 
-        // Assert
+        //Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getName()).isNotNull();
     }

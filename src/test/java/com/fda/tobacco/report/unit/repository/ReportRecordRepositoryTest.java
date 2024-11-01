@@ -27,10 +27,14 @@ public class ReportRecordRepositoryTest {
     }
 
     @Test
-    public void testSaveReportRecordEntity() {
+    public void givenReportRecord_whenSaved_thenAbleToRetrieveSuccessfully() {
+        //Given
         ReportRecordEntity reportRecord = TestUtil.createReportRecordEntity();
 
+        //When
         ReportRecordEntity savedRecord = reportRecordRepository.save(reportRecord);
+
+        //Then
         assertNotNull(savedRecord);
         assertThat(savedRecord.getRecordId()).isNotNull();
         assertThat(savedRecord.getReportId()).isEqualTo(1234);

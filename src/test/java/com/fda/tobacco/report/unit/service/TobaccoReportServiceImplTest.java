@@ -51,36 +51,36 @@ public class TobaccoReportServiceImplTest {
     }
 
     @Test
-    public void testFindMostCommonProduct() throws ProductNotFoundException {
-        //Prepare mock response
+    public void givenReportsExist_whenFindMostCommonProduct_thenReturnMostCommonProduct() throws ProductNotFoundException {
+        //Given - a mock response
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .setBody("{\"results\":[{\"term\":\"cigarette\",\"count\":810}]}"));
 
-        //Invoke
+        //When
         Product mostCommonProduct = tobaccoReportService.findMostCommonProduct();
 
-        //Assert
+        //Then
         assertThat(mostCommonProduct).isNotNull();
         assertThat(mostCommonProduct.getName()).isEqualTo("cigarette");
 
     }
 
     @Test
-    public void testFindReportsBySubmittedDate() {
-        //Prepare mock response
+    public void givenReportsWithSpecificDate_whenSearchingByDate_thenReportsAreReturned() {
+        //Given - a mock response
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .setBody("{\"results\":[{\"date_submitted\":\"06/21/2019\",\"nonuser_affected\":\"No\",\"reported_health_problems\":[\"No information provided\"],\"number_tobacco_products\":1,\"report_id\":884,\"number_health_problems\":0,\"reported_product_problems\":[\"Other\"],\"tobacco_products\":[\"Cigarette\"],\"number_product_problems\":1}]}"));
 
-        //Invoke
+        //When
         ReportSearchResponse response = tobaccoReportService.findReportsBySubmittedDate("06/21/2019");
 
-        //Assert
+        //Then
         assertThat(response).isNotNull();
         assertThat(response.getReports().size()).isEqualTo(1);
         Report report = response.getReports().getFirst();

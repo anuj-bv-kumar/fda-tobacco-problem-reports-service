@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test and verify TobaccoReportController class using mock
+ * Test and verify TobaccoReportController class api's using BDD approach
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -40,52 +40,64 @@ public class TobaccoReportControllerTest {
     private static final String submittedDate = "06/21/2019";
 
     @Test
-    public void whenGetReportsBySubmittedDateWithValidURL_thenReturnStatusOk() throws Exception {
-
+    public void givenValidSubmittedDate_whenGetReportsBySubmittedDate_thenStatusIsOk() throws Exception {
+        //Given
         ReportSearchResponse reportSearchResponse = TestUtil.createReportSearchResponse();
         when(tobaccoReportService.findReportsBySubmittedDate(submittedDate)).thenReturn(reportSearchResponse);
 
+        //When
         mockMvc.perform(get("/api/fda/tobacco/reports?date_submitted=" + submittedDate))
-                .andExpect(status().isOk());
+        //then
+        .andExpect(status().isOk());
     }
 
     @Test
-    public void whenGetReportsBySubmittedDateWithoutQueryParam_thenReturnStatusBadRequest() throws Exception {
+    public void givenNoQueryParam_whenGetReportsBySubmittedDate_thenStatusIsBadRequest() throws Exception {
+        //Given
         ReportSearchResponse reportSearchResponse = TestUtil.createReportSearchResponse();
         when(tobaccoReportService.findReportsBySubmittedDate(submittedDate)).thenReturn(reportSearchResponse);
 
+        //When
         mockMvc.perform(get("/api/fda/tobacco/reports"))
-                .andExpect(status().is(400));
+        //then
+        .andExpect(status().is(400));
     }
 
     @Test
-    public void whenFindMostCommonProduct_thenReturnStatusOk() throws Exception {
-
+    public void givenReportsExist_whenFindMostCommonProduct_thenStatusIsOk() throws Exception {
+        //Given
         when(tobaccoReportService.findMostCommonProduct()).thenReturn(new Product("Cigarette"));
 
+        //When
         mockMvc.perform(get("/api/fda/tobacco/reports/products/common"))
-                .andExpect(status().isOk());
+        //Then
+        .andExpect(status().isOk());
     }
 
     @Test
-    public void whenSaveReportRecordWithValidParams_thenReturnStatusOk() throws Exception {
+    public void givenValidReportRecord_whenSaveReportRecord_thenStatusIsOk() throws Exception {
+        //Given
         ReportRecord reportRecord = TestUtil.createReportRecord();
         when(tobaccoReportRecordService.saveReportRecord(Mockito.any(ReportRecord.class))).thenReturn(reportRecord);
 
+        //When
         mockMvc.perform(post("/api/fda/tobacco/reports")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(reportRecord)))
-                .andExpect(status().isOk());
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(new ObjectMapper().writeValueAsString(reportRecord)))
+        //Then
+        .andExpect(status().isOk());
     }
 
     @Test
-    public void whenSaveReportRecordWithoutRequestBody_thenReturnStatusBadRequest() throws Exception {
+    public void givenNoRequestBody_whenSaveReportRecord_thenStatusIsBadRequest() throws Exception {
+        //Given
         ReportRecord reportRecord = TestUtil.createReportRecord();
         when(tobaccoReportRecordService.saveReportRecord(Mockito.any(ReportRecord.class))).thenReturn(reportRecord);
 
-        //Don't pass request body
+        //When
         mockMvc.perform(post("/api/fda/tobacco/reports")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+        .contentType(MediaType.APPLICATION_JSON))
+        //Then
+        .andExpect(status().is(400));
     }
 }

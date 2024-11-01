@@ -25,19 +25,17 @@ public class TobaccoReportRecordServiceImplTest {
     private ReportRecordRepository reportRepository;
 
     @Test
-    public void testSaveReportRecord() {
+    public void givenValidReportRecord_whenSaving_thenRecordIsPersisted() {
 
-        //Prepare test data
+        //Given
         ReportRecordEntity reportRecordEntity = TestUtil.createReportRecordEntity();
         ReportRecord reportRecord = TestUtil.createReportRecord();
-
-        //Mock
         when(reportRepository.save(reportRecordEntity)).thenReturn(reportRecordEntity);
 
-        //Invoke
+        //When
         ReportRecord reportRecordResponse = tobaccoReportRecordService.saveReportRecord(reportRecord);
 
-        //Assert
+        //Then
         assertThat(reportRecordResponse).isNotNull();
         assertThat(reportRecordResponse.getReportId()).isEqualTo(1234);
         assertThat(reportRecordResponse.getDateSubmitted()).isEqualTo("06/21/2019");

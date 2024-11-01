@@ -11,7 +11,7 @@ class TobaccoReportServiceApplicationTests {
 	}
 
     @Test
-    public void testApplicationMainMethod() {
+    public void shouldInvokeApplicationMainMethod() {
         TobaccoReportServiceApplication.main(new String[]{});
     }
 
